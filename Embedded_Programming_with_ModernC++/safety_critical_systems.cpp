@@ -6,6 +6,7 @@
 #include <map>
 #include <functional>
 #include <initializer_list>
+#include <type_traits>
 
 struct InitializationData{
     InitializationData(std::initializer_list<int>) {
@@ -46,6 +47,13 @@ namespace Distance {
     }
 }
 
+template<typename Type>
+void gcd(Type a, Type b) {
+    static_assert(std::is_integral<Type>::value, "Argument T must be an integral type!");
+    static_assert(std::is_arithmetic<Type>::value, "Argument T must be an arithmetic type!");
+    static_assert(sizeof(Type) >= 4, "Argument T must have an sizeof >=4");
+}
+
 using namespace Distance::Unit;
 
 int main() {
@@ -84,6 +92,16 @@ int main() {
     std::cout << "2.0_ft => " << 2.0_ft << "\n";
     std::cout << "1.0_ft => " << 1.0_ft << "\n";
     std::cout << "1.0_cm => " << 1.0_cm << "\n";
+    /*********************************************************************************/
+    /********************** Assertions at compile-time *******************************/
+    //https://en.cppreference.com/w/cpp/types/is_integral
+    //https://en.cppreference.com/w/cpp/types/is_arithmetic
+    //gcd("HI", "hi");  //=> does not even compile, not an integral type, not an arithmetic type
+    //gcd(1.0, 1.0);  //=> does not even compile, not an integral type
+    gcd(10, 10);  //=> Compiles fine
+    //gcd('c', 'c');  //=> does not even compile, sizeof constraint
+    //gcd(true, false); //=> does not even compile, sizeof constraint
+
     /*********************************************************************************/
 
     return 0;
