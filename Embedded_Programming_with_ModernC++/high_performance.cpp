@@ -2,6 +2,8 @@
 #include <typeinfo>
 #include <iostream>
 
+constexpr int sq(int x) {return x*x;}
+
 int main() {
     /*************************** Type Traits **********************/
     typedef int Integer;
@@ -23,6 +25,14 @@ int main() {
     typedef std::remove_const_t<CI> I;
     std::cout << "const int == I ? " << std::boolalpha << std::is_same<const int, I>::value << "\n";
     std::cout << "int == I ? " << std::boolalpha << std::is_same<int, I>::value << "\n";
+    /**************************************************************/
+    /*****************  constexpr  ********************************/
+    int a = 10;
+    //static_assert(100 == sq(a), "WRONG!"); //=> non-constant condition for static assertion
+    constexpr int b = 10;
+    static_assert(100 == sq(b), "WRONG!"); //=> non-constant condition for static assertion
+    int arraySq[sq(2)];
+    int arraySquare[sq(b)];
     /**************************************************************/
 
 }
