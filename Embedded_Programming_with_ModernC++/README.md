@@ -1,6 +1,7 @@
 # References
 [is_integral](//https://en.cppreference.com/w/cpp/types/is_integral)
 [is_arithmetic](//https://en.cppreference.com/w/cpp/types/is_arithmetic)
+[Moving Resources](https://towardsdatascience.com/c-basics-moving-resources-4bd58bc5e6c8)
 
 
 # Build

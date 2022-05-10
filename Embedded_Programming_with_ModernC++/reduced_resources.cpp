@@ -19,7 +19,14 @@ public:
     BigData& operator=(const BigData& other) {
         std::cout << "BigData::operator=(const BigData& other)\n";
         if (&other != this) {
-            //...
+            delete[] data_;
+
+            // Initialize this
+            data_ = new int[other.len_];
+
+            // Copy from other
+            len_ = other.len_;
+            std::copy(other.data_, other.data_ + len_, data_);
         }
         return *this;
     }
@@ -37,8 +44,26 @@ public:
     */
     BigData(BigData&& other) : len_{other.len_}, data_{other.data_} {
         std::cout << "BigData::BigData(BigData&& other)\n";
+        // Invalidate other
         other.len_ = 0;
         other.data_ = nullptr;
+    }
+
+    //Move Assignment
+    BigData& operator=(BigData&& other) {
+        std::cout << "BigData::operator=(BigData&& other)\n";
+        if (&other != this) {
+            delete[] data_;
+
+            // Steal resources from other
+            len_ = other.len_;
+            data_ = other.data_;
+
+            // Invalidate other
+            other.len_ = 0;
+            other.data_ = nullptr;
+        }
+        return *this;
     }
 
     ~BigData() {
