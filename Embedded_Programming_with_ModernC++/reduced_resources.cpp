@@ -78,10 +78,39 @@ private:
 };
 
 
+template <typename T, typename Arg>
+T create(Arg&& a) {
+    return T(std::forward<Arg>(a));
+}
+
 int main() {
     /************************* Move Semantic **********************/
     std::vector<BigData> vec{};
     vec.push_back(BigData(1000));
-    return EXIT_SUCCESS;
     /**************************************************************/
+    /******************** Perferct Forwarding**********************/
+    // LVALUES
+    int five = 5;
+    int myFive = create<int>(five);
+    std::cout << "myFive : " << myFive << "\n";
+
+    double dFive = 5.0;
+    double myDF = create<double>(dFive);
+    std::cout << "myDoubleFive : " << myDF << "\n";
+
+    std::string str{"LValue"};
+    std::string str2 = create<std::string>(str);
+    std::cout << "str2 : " << str2 << "\n";
+
+    // RVALUES
+    int myFive2 = create<int>(5);
+    std::cout << "myFive2 : " << myFive2 << "\n";
+
+    std::string str3 = create<std::string>(std::string{"RValue"});
+    std::cout << "str3 : " << str3 << "\n";
+
+    std::string str4 = create<std::string>(std::move(str3));
+    std::cout << "str4 : " << str4 << "\n";
+    /**************************************************************/
+    return EXIT_SUCCESS;
 }
