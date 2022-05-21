@@ -3,6 +3,32 @@
 #include <iostream>
 #include <vector>
 
+static std::size_t allocations{0};
+static std::size_t deallocations{0};
+
+struct MyClass {
+    std::string str{"VALUEVALUEVALUE"};
+    //double d{8.0};
+    //int val{5};
+};
+
+void* operator new(std::size_t sz) {
+    std::cout << "Allocation of size : " << sz << "\n";
+    allocations += 1;
+    return std::malloc(sz);
+}
+
+void operator delete(void* ptr) {
+    std::cout << "Deallocation\n";
+    deallocations += 1;
+    std::free(ptr);
+}
+
+void getInfo(){
+    std::cout << "  Number of allocations : " << allocations << "\n";
+    std::cout << "  Number of deallocations : " << deallocations << "\n";
+}
+
 class BigData {
 public:
     explicit BigData(size_t len) : len_{len}, data_{new int[len]} {
@@ -111,6 +137,13 @@ int main() {
 
     std::string str4 = create<std::string>(std::move(str3));
     std::cout << "str4 : " << str4 << "\n";
+    /**************************************************************/
+    /************ Overloading operator new and delete *************/
+    double* myDoubleArr = new double[2]{2.2, 4.4};
+    auto myC = new MyClass;
+    delete myC;
+    delete[] myDoubleArr;
+    getInfo();
     /**************************************************************/
     return EXIT_SUCCESS;
 }
