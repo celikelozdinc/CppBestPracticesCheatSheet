@@ -2,6 +2,7 @@
 #include <chrono>
 #include <iostream>
 #include <vector>
+#include <array>
 
 static std::size_t allocations{0};
 static std::size_t deallocations{0};
@@ -144,6 +145,19 @@ int main() {
     delete myC;
     delete[] myDoubleArr;
     getInfo();
+    /**************************************************************/
+    /*********** STL : Sequential Containers***********************/
+    std::array<std::string, 5> strings{"bir", "ki", "uc", "dort", "bes"};
+    std::cout << "strings[1] : " << strings[1] << "\n";
+    std::cout << "strings[3] : " << strings[3] << "\n";
+
+    try {
+        std::cout << strings.at(6) << "\n";
+    } catch (std::exception& ex) {
+        std::cout << "Caught an exception : " << ex.what() << "\n";
+    }
+
+    std::cout << "strings[7] : " << strings[7] << "\n"; //=> Does not check boundaries
     /**************************************************************/
     return EXIT_SUCCESS;
 }
