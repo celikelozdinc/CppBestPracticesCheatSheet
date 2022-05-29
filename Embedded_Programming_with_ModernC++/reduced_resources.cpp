@@ -3,9 +3,25 @@
 #include <iostream>
 #include <vector>
 #include <array>
+#include <memory>
 
 static std::size_t allocations{0};
 static std::size_t deallocations{0};
+
+struct MyInt {
+    MyInt() : i_{-1} {
+        std::cout << "DEFAULT Hello from " << i_ << "\n";
+    }
+    explicit MyInt(int i) : i_{i} {
+        std::cout << "Hello from " << i_ << "\n";
+    }
+
+    ~MyInt() {
+        std::cout << "Good bye from " << i_ << "\n";
+    }
+
+    int i_;
+};
 
 struct MyClass {
     std::string str{"VALUEVALUEVALUE"};
@@ -112,10 +128,12 @@ T create(Arg&& a) {
 
 int main() {
     /************************* Move Semantic **********************/
+    std::cout << "\n\n\n\n";
     std::vector<BigData> vec{};
     vec.push_back(BigData(1000));
     /**************************************************************/
     /******************** Perferct Forwarding**********************/
+    std::cout << "\n\n\n\n";
     // LVALUES
     int five = 5;
     int myFive = create<int>(five);
@@ -140,6 +158,7 @@ int main() {
     std::cout << "str4 : " << str4 << "\n";
     /**************************************************************/
     /************ Overloading operator new and delete *************/
+    std::cout << "\n\n\n\n";
     double* myDoubleArr = new double[2]{2.2, 4.4};
     auto myC = new MyClass;
     delete myC;
@@ -157,7 +176,43 @@ int main() {
         std::cout << "Caught an exception : " << ex.what() << "\n";
     }
 
-    std::cout << "strings[7] : " << strings[7] << "\n"; //=> Does not check boundaries
+    //std::cout << "strings[7] : " << strings[7] << "\n";  //=> Does not check boundaries
+    /**************************************************************/
+    /***************   Smart Pointers *****************************/
+    std::cout << "\n\n\n\n";
+    std::unique_ptr<MyInt> up1{ new MyInt{1998} };
+    std::cout << "up1.get() : " << up1.get() << "\n";
+
+    std::unique_ptr<MyInt> up2;
+    up2 = std::move(up1);
+    std::cout << "After moving from up1 to up2:\n";
+    std::cout << "up1.get() : " << up1.get() << "\n";
+    std::cout << "up2.get() : " << up2.get() << "\n";
+
+    {
+        std::unique_ptr<MyInt> localPtr {new MyInt{2003}};
+    }
+
+    up2.reset(new MyInt{2011});
+    auto myI = up2.release();
+    delete myI;
+
+    std::unique_ptr<MyInt> up3{ new MyInt{2020} };
+    std::unique_ptr<MyInt> up4{ new MyInt{2022} };
+    std::cout << "up3.get() : " << up3.get() << "\n";
+    std::cout << "up4.get() : " << up4.get() << "\n";
+    std::swap(up3, up4);
+    std::cout << "After swapping up4 with up3:\n";
+    std::cout << "up3.get() : " << up3.get() << "\n";
+    std::cout << "up4.get() : " << up4.get() << "\n";
+
+    std::unique_ptr<MyInt[]> myInts = std::make_unique<MyInt[]>(3);
+    std::cout << "myInts[0] : " << myInts[0].i_ << "\n";
+    myInts[0] = MyInt{30};
+    myInts[1] = MyInt{20};
+    myInts[2] = MyInt{10};
+    std::cout << "myInts[0] : " << myInts[0].i_ << "\n";
+
     /**************************************************************/
     return EXIT_SUCCESS;
 }
