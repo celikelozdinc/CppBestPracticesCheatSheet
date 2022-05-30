@@ -8,6 +8,12 @@
 static std::size_t allocations{0};
 static std::size_t deallocations{0};
 
+struct ShareMe : std::enable_shared_from_this<ShareMe> {
+    std::shared_ptr<ShareMe> create_shared_from_me() {
+        return shared_from_this();
+    }
+};
+
 struct MyInt {
     MyInt() : i_{-1} {
         std::cout << "DEFAULT Hello from " << i_ << "\n";
@@ -179,6 +185,8 @@ int main() {
     //std::cout << "strings[7] : " << strings[7] << "\n";  //=> Does not check boundaries
     /**************************************************************/
     /***************   Smart Pointers *****************************/
+
+    // Exclusive ownership
     std::cout << "\n\n\n\n";
     std::unique_ptr<MyInt> up1{ new MyInt{1998} };
     std::cout << "up1.get() : " << up1.get() << "\n";
@@ -212,6 +220,43 @@ int main() {
     myInts[1] = MyInt{20};
     myInts[2] = MyInt{10};
     std::cout << "myInts[0] : " << myInts[0].i_ << "\n";
+
+    // Shared ownership
+    std::cout << "\n\n\n\n";
+    std::shared_ptr<MyInt> sharPtr(new MyInt(1998));
+    std::cout << "sharPtr.use_count()       = " << sharPtr.use_count() << "\n";
+
+    {   // artificial scope
+        std::shared_ptr<MyInt> locSharPtr(sharPtr);
+        std::cout << "sharPtr.use_count()       = " << sharPtr.use_count() << "\n";
+        std::cout << "locSharPtr.use_count()    = " << locSharPtr.use_count() << "\n";
+    }
+    std::cout << "sharPtr.use_count()       = " << sharPtr.use_count() << "\n";
+
+    std::shared_ptr<MyInt> globSharPtr = sharPtr;
+    std::cout << "sharPtr.use_count()           = " << sharPtr.use_count() << "\n";
+    std::cout << "globSharPtr.use_count()       = " << globSharPtr.use_count() << "\n";
+    globSharPtr.reset();
+    std::cout << "sharPtr.use_count()           = " << sharPtr.use_count() << "\n";
+    std::cout << "globSharPtr.use_count()       = " << globSharPtr.use_count() << "\n";
+    sharPtr.reset();  //=> Releases the resource when the last shared_ptr goes out of scope
+    std::cout << "sharPtr.use_count()           = " << sharPtr.use_count() << "\n";
+    std::cout << "globSharPtr.use_count()       = " << globSharPtr.use_count() << "\n";
+
+    // CRTP with shared_ptr
+    std::cout << "\n\n\n\n";
+    // shares same object
+    std::shared_ptr<ShareMe> shareMe(new ShareMe);
+    std::shared_ptr<ShareMe> shMe = shareMe->create_shared_from_me();
+
+    // both resources have the same address
+    std::cout << "  Address of resource of shareMe  : " << static_cast<void*>(shareMe.get()) << "\n";
+    std::cout << "  Address of resource of shMe     : " << static_cast<void*>(shMe.get()) << "\n";
+
+    // same use count
+    std::cout << "shareMe.use_count()       :   " << shareMe.use_count() << "\n";
+    std::cout << "shMe.use_count()          :   " << shMe.use_count() << "\n";
+
 
     /**************************************************************/
     return EXIT_SUCCESS;
