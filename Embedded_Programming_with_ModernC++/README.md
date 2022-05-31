@@ -14,3 +14,13 @@ g++ Embedded_Programming_with_ModernC++/safety_critical_systems.cpp -o safety_cr
 ```bash
 g++ Embedded_Programming_with_ModernC++/high_performance.cpp -o high_performance ; ./high_performance ; rm -rf ./high_performance
 ```
+## Reduced Resources
+```bash
+g++ Embedded_Programming_with_ModernC++/reduced_resources.cpp -o reduced ; ./reduced ; rm -rf ./reduced
+```
+
+
+## Several Tasks Simultaneously
+```bash
+g++ Embedded_Programming_with_ModernC++/several_tasks_simultaneously.cpp -lpthread -o several ; ./several ; rm -rf ./several
+```
