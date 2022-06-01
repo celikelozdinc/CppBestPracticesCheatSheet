@@ -15,6 +15,17 @@ void Y() {
     readX = x.load();
 }
 
+
+void ThreadFunc() {
+    std::cout<< "Thread ID : " << std::this_thread::get_id() <<", Hello from FUNCTION!\n";
+}
+
+struct ThreadFuncObj {
+    void operator() () const {
+        std::cout<< "Thread ID : " << std::this_thread::get_id() <<", Hello from FUNCTION OBJECT!\n";
+    }
+};
+
 int main() {
     /***************   Synchronization and Ordering ***************/
     // Default memory mode : Sequential Consistency
@@ -28,6 +39,28 @@ int main() {
     std::cout << "(readX, readY) = " << "(" << readX << "," << readY << ")\n";  //=> (20,0)/(0,10)
     /**************************************************************/
     /************************* Threads ****************************/
+    std::cout << "\n\n\n\n";
+    auto lambdaExpr = [](){std::cout<< "Thread ID : " << std::this_thread::get_id() <<", Hello from LAMBDA EXPRESSION!\n"; };
+    std::cout<< "Thread ID : " << std::this_thread::get_id() <<", Hello from ***MAIN***\n";
+    std:: thread t1{ThreadFunc};
+    std::thread t2{ThreadFuncObj()};
+    std::thread t3{lambdaExpr};
+
+    std::cout << "Is t1 joinable? " << std::boolalpha << t1.joinable() << "\n";
+    std::cout << "Is t2 joinable? " << std::boolalpha << t2.joinable() << "\n";
+    std::cout << "Is t3 joinable? " << std::boolalpha << t3.joinable() << "\n";
+
+    t1.join();
+    t2.join();
+    t3.join();
+
+    std::cout << "Is t1 joinable? " << std::boolalpha << t1.joinable() << "\n";
+    std::cout << "Is t2 joinable? " << std::boolalpha << t2.joinable() << "\n";
+    std::cout << "Is t3 joinable? " << std::boolalpha << t3.joinable() << "\n";
+
+    /**************************************************************/
+    /**********************  Mutexes     **************************/
+    std::cout << "\n\n\n\n";
     /**************************************************************/
 
     return EXIT_SUCCESS;
