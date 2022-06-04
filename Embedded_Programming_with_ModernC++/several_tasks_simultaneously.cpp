@@ -2,6 +2,7 @@
 #include <thread>
 #include <atomic>
 #include <mutex>
+#include <array>
 
 std::atomic<int> x, y;
 int readX, readY;
@@ -34,9 +35,13 @@ struct Worker {
             // begin work
             std::this_thread::sleep_for(std::chrono::milliseconds(200));
             // end work
+            /*
             coutMutex.lock();
             std::cout << name << " : " << "Work " << i << " done on Thread " << std::this_thread::get_id() << "\n";
             coutMutex.unlock();
+            */
+            std::lock_guard<std::mutex> lockG(coutMutex);
+            std::cout << name << " : " << "Work " << i << " done on Thread " << std::this_thread::get_id() << "\n";
         }
     }
 
@@ -45,7 +50,20 @@ struct Worker {
     static std::mutex coutMutex;
 };
 
+struct Counter {
+    explicit Counter(const int& i) : current(i) {}
+    void operator() () {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        counterMutex.lock();
+        std::cout << "On thread : " << std::this_thread::get_id() << ", second : " << current << "\n";
+        counterMutex.unlock();
+    }
+    int current;
+    static std::mutex counterMutex;
+};
+
 std::mutex Worker::coutMutex;
+std::mutex Counter::counterMutex;
 
 int main() {
     /***************   Synchronization and Ordering ***************/
@@ -89,6 +107,17 @@ int main() {
     herb.join();
     scott.join();
     bjarne.join();
+
+    // Countdown
+    std::array<std::thread, 10> threads;
+    for (int i = threads.size() ; i > 0 ; i --) {
+        threads[i] = std::thread(Counter(i));
+    }
+
+    for (int i = threads.size() ; i > 0 ; i --) {
+        threads[i].join();
+    }
+
     /**************************************************************/
 
     return EXIT_SUCCESS;
