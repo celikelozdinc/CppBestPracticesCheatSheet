@@ -1,6 +1,7 @@
 #include <iostream>
 #include <thread>
 #include <atomic>
+#include <mutex>
 
 std::atomic<int> x, y;
 int readX, readY;
@@ -25,6 +26,26 @@ struct ThreadFuncObj {
         std::cout<< "Thread ID : " << std::this_thread::get_id() <<", Hello from FUNCTION OBJECT!\n";
     }
 };
+
+struct Worker {
+    explicit Worker(const std::string& n) : name{n} {}
+    void operator() () {
+        for (int i = 1 ; i <= 3 ; i++) {
+            // begin work
+            std::this_thread::sleep_for(std::chrono::milliseconds(200));
+            // end work
+            coutMutex.lock();
+            std::cout << name << " : " << "Work " << i << " done on Thread " << std::this_thread::get_id() << "\n";
+            coutMutex.unlock();
+        }
+    }
+
+
+    std::string name;
+    static std::mutex coutMutex;
+};
+
+std::mutex Worker::coutMutex;
 
 int main() {
     /***************   Synchronization and Ordering ***************/
@@ -61,6 +82,13 @@ int main() {
     /**************************************************************/
     /**********************  Mutexes     **************************/
     std::cout << "\n\n\n\n";
+    std::thread herb = std::thread(Worker("Herb"));
+    std::thread scott = std::thread(Worker("        Scott"));
+    std::thread bjarne = std::thread(Worker("    Bjarne"));
+
+    herb.join();
+    scott.join();
+    bjarne.join();
     /**************************************************************/
 
     return EXIT_SUCCESS;
