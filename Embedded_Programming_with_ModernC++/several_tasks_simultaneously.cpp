@@ -3,9 +3,13 @@
 #include <atomic>
 #include <mutex>
 #include <array>
+#include <condition_variable>
 
 std::atomic<int> x, y;
 int readX, readY;
+std::mutex mutex_;
+std::condition_variable condVar;
+bool ready;  //=> false
 
 void X() {
     x.store(20);
@@ -49,6 +53,23 @@ struct Worker {
     std::string name;
     static std::mutex coutMutex;
 };
+
+void Receiver() {
+    std::cout << "On thread " << std::this_thread::get_id() << ", RECEIVER started execution.\n";
+    std::unique_lock<std::mutex> lck(mutex_);
+    condVar.wait(lck, []{return ready;});
+    // process
+    std::cout << "On thread " << std::this_thread::get_id() << ", RECEIVER started processing shared data.\n";
+}
+
+void Sender() {
+    {
+        std::lock_guard<std::mutex> lck(mutex_);
+        ready = true;
+    }
+    std::cout << "On thread " << std::this_thread::get_id() << ", SENDER will notify RECEIVER.\n";
+    condVar.notify_one();
+}
 
 struct Counter {
     explicit Counter(const int& i) : current(i) {}
@@ -118,6 +139,21 @@ int main() {
         threads[i].join();
     }
 
+    /**************************************************************/
+    /*******************  Condition Variables *********************/
+    std::cout << "\n\n\n\n";
+    std::thread rec(Receiver);
+    std::thread send(Sender);
+    rec.join();
+    send.join();
+
+    // On thread 140029112329792, RECEIVER started execution.
+    // On thread 140029112329792, RECEIVER started processing shared data.
+    // On thread 140029120722496, SENDER will notify RECEIVER
+    
+    // On thread 140430884705856, RECEIVER started execution.
+    // On thread 140430893098560, SENDER will notify RECEIVER.
+    // On thread 140430884705856, RECEIVER started processing shared data.
     /**************************************************************/
 
     return EXIT_SUCCESS;
