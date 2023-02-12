@@ -1,6 +1,8 @@
 /**
  * g++ mutex_usage.cpp -lpthread -o mutex ; ./mutex ; rm -rf ./mutex
  * https://medium.com/@simontoth/daily-bit-e-of-c-std-mutex-558fe54c9dc3
+ * https://cplusplus.com/reference/mutex/unique_lock/
+ * https://www.cppstories.com/2020/05/lambdas-async.html/
  */
 
 #include <mutex>
