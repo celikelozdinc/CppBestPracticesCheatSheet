@@ -4,3 +4,4 @@ reduced
 several
 Embedded_Programming_with_ModernC++/.vscode/**
 .idea/**
+link_time_polymorphism/obj/**
