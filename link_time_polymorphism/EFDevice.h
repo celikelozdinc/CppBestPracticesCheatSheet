@@ -7,7 +7,7 @@
 
 namespace Drivers {
   struct Impl {
-    uint64_t counter{100};
+    uint64_t counter{UINT64_MAX - 1};
     std::string indicator{"ExpensiveFastDevice"};
   };
 }
