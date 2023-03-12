@@ -2,7 +2,6 @@
 
 #include <iostream>
 
-//g++ -c link_time_polymorphism/EFDevice.cpp -o link_time_polymorphism/obj/EFDevice.o
 namespace Drivers {
   DeviceDriver::DeviceDriver(std::unique_ptr<Impl> p) {
     this->pIml = std::move(p);

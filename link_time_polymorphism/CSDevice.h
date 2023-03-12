@@ -1,7 +1,6 @@
 #ifndef CPPBESTPRACTICESCHEATSHEET_LINK_TIME_POLYMORPHISM_CSDEVICE_H
 #define CPPBESTPRACTICESCHEATSHEET_LINK_TIME_POLYMORPHISM_CSDEVICE_H
 
-//g++ -c link_time_polymorphism/CSDevice.cpp -o link_time_polymorphism/obj/CSDevice.o
 #include "device.h"
 #include <memory>
 
