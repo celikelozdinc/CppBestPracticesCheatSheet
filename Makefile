@@ -4,17 +4,20 @@ CFLAGS = -Wall -g
 RM = rm
 RMFLAGS = -rfv
 
-CSD_CPP = link_time_polymorphism/CSDevice.cpp
-CSD_OUT = link_time_polymorphism/obj/CSDevice.o
+SOURCE_DIR = link_time_polymorphism
+OUT_DIR = $(SOURCE_DIR)/obj
 
-EFD_CPP = link_time_polymorphism/EFDevice.cpp
-EFD_OUT = link_time_polymorphism/obj/EFDevice.o
+CSD_CPP = $(SOURCE_DIR)/CSDevice.cpp
+CSD_OUT = $(OUT_DIR)/CSDevice.o
 
-MAIN_CPP = link_time_polymorphism/main.cpp
-MAIN_OUT = link_time_polymorphism/obj/main.o
+EFD_CPP = $(SOURCE_DIR)/EFDevice.cpp
+EFD_OUT = $(OUT_DIR)/EFDevice.o
 
-PRODUCTION_W_CSD = link_time_polymorphism/obj/production_w_csd
-PRODUCTION_W_EFD = link_time_polymorphism/obj/production_w_efd
+MAIN_CPP = $(SOURCE_DIR)/main.cpp
+MAIN_OUT = $(OUT_DIR)/main.o
+
+PRODUCTION_W_CSD = $(OUT_DIR)/production_w_csd
+PRODUCTION_W_EFD = $(OUT_DIR)/production_w_efd
 
 csd:
 	$(CC) $(CFLAGS) -c $(CSD_CPP) -o $(CSD_OUT)
@@ -38,4 +41,5 @@ run_efd: production_w_efd
 	./$(PRODUCTION_W_EFD)
 
 clean:
-	$(RM) $(RMFLAGS)  link_time_polymorphism/obj/*.o link_time_polymorphism/obj/production_w*
+	@echo "Cleaning directory : "$(OUT_DIR)
+	$(RM) $(RMFLAGS) $(OUT_DIR)/*.o $(OUT_DIR)/production_w*
