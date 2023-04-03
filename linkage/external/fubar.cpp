@@ -1,5 +1,6 @@
 #include "fubar.h"
 
+//fwd declarations
 extern int _extern;
 extern void foo(int i);
 

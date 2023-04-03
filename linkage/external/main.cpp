@@ -1,5 +1,6 @@
 #include <iostream>
 
+//fwd declarations
 extern void bar(int j);
 extern void fubar(int i);
 extern void baz(int i);
