@@ -88,4 +88,7 @@ int main () {
   printvalcat<decltype((foo()))>();
   printvalcat<decltype((bar()))>();
   printvalcat<decltype((baz()))>();
+  printvalcat<decltype((x+5))>();
+  printvalcat<decltype((x++))>();
+  printvalcat<decltype((--x))>();
 }
