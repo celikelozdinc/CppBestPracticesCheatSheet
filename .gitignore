@@ -2,6 +2,8 @@ safety_critical_systems
 high_performance
 reduced
 several
+references
+mandatory_copy_elision
 Embedded_Programming_with_ModernC++/.vscode/**
 .idea/**
 link_time_polymorphism/obj/**
