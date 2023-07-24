@@ -1,7 +1,21 @@
 #include <utility>
 #include <type_traits>
 #include <iostream>
+#include <string>
+#include <string_view>
 
+
+/**
+ * An expression’s value category
+ * determines what references the expression may initialize
+ * T& can be initialized only from lvalues
+ * T&& can be initialized only from rvalues
+ * const T& can be initialized from any value category
+ *      but overload resolution will prefer
+ *      T&& over const T& for rvalues if there are functions accepting both
+ *          This is why copy constructors can fill the role of a missing move constructor.
+ *  The reference binding rules mostly explain which functions can be selected in overload resolution for arguments of what value category.
+ */
 template <typename T>
 void printvalcat() {
   if constexpr(std::is_rvalue_reference_v<T>) {
@@ -45,9 +59,10 @@ struct Widget{};
 /**
  * Nec C++ Quiz — 0043
  * https://necatiergin2019.medium.com/nec-c-quiz-0043-e484ffcffb97
- * @return
+ * https://www.scs.stanford.edu/~dm/blog/decltype.pdf
  */
 int main () {
+  using namespace std::literals;
   int x{}, y{};
   Widget w1{}, w2{};
   std::cout << "***************1******************\n";
@@ -94,6 +109,17 @@ int main () {
   std::cout << "x+5 ->\t"; printvalcat<decltype((x+5))>(); //=> PRVALUE
   std::cout << "x++ ->\t"; printvalcat<decltype((x++))>(); //=> PRVALUE
   std::cout << "--x ->\t"; printvalcat<decltype((--x))>(); //=> LVALUE
-  std::cout << "std::string{''} ->\t"; printvalcat<decltype((std::string{"literal"}))>();
-  std::cout << "'literal' ->\t"; printvalcat<decltype(("literal"))>();
+  std::cout << "std::string{''}->\t"; printvalcat<decltype((std::string{"literal"}))>();
+  std::cout << "'literal's->\t\t"; printvalcat<decltype(("literal"s))>();
+  std::cout << "'literal'sv->\t\t"; printvalcat<decltype(("literal"sv))>();
+  std::cout << "'literal'->\t\t"; printvalcat<decltype(("literal"))>();
+  std::cout << "std::terminate()->\t"; printvalcat<decltype((std::terminate()))>();
+  auto a{17};
+  int& ref2a = a;
+  std::cout << "a->\t\t"; printvalcat<decltype(a)>();
+  std::cout << "(a)->\t\t"; printvalcat<decltype((a))>();
+  std::cout << "ref2a->\t\t"; printvalcat<decltype((ref2a))>();
+  std::cout << "true->\t\t"; printvalcat<decltype((true))>();
+  std::cout << "nullptr->\t"; printvalcat<decltype((nullptr))>();
+
 }
