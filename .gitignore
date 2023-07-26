@@ -4,6 +4,7 @@ reduced
 several
 references
 mandatory_copy_elision
+life_extension
 Embedded_Programming_with_ModernC++/.vscode/**
 .idea/**
 link_time_polymorphism/obj/**
