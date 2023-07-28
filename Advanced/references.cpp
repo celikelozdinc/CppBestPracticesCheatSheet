@@ -4,6 +4,7 @@
 #include <string>
 #include <string_view>
 
+#include "value_categories.h"
 
 /**
  * An expression’s value category
@@ -16,21 +17,9 @@
  *          This is why copy constructors can fill the role of a missing move constructor.
  *  The reference binding rules mostly explain which functions can be selected in overload resolution for arguments of what value category.
  */
-template <typename T>
-void printvalcat() {
-  if constexpr(std::is_rvalue_reference_v<T>) {
-    std::cout << "XVALUE\n";
-  } else if constexpr (std::is_lvalue_reference_v<T>) {
-    std::cout << "LVALUE\n";
-  } else if constexpr (!std::is_reference_v<T>) {
-    std::cout << "PRVALUE\n";
-  } else {
-    std::cout << "UNDEFINED VALUE CATEGORY\n";
-  }
-}
 
 template <typename T>
-void fum(T, T&&) {
+void fum(T arg1, T &&arg2) {
   std::cout << "(T, T&&)\n";
 }
 
