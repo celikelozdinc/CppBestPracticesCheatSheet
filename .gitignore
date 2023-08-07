@@ -6,6 +6,7 @@ references
 mandatory_copy_elision
 life_extension
 universal_reference
+structured_binding
 Embedded_Programming_with_ModernC++/.vscode/**
 .idea/**
 link_time_polymorphism/obj/**
