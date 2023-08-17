@@ -96,6 +96,7 @@ int main() {
     std::cout << "Total count of invocations of mock object : "<< ifMocker._count << '\n';
     std::cout << "***************3******************\n";
     std::cout << "***************4******************\n";
+    //https://github.com/necatiergin/CPP_KURSU_KODLAR/blob/main/0720_TEMPLATES_CTAD/ctad_11.cpp
     ArrayWrapper arr1{"ozdinc"}; //CTAD
     double darr[]{1.7, 4.1};
     ArrayWrapper arr2{darr}; //CTAD
