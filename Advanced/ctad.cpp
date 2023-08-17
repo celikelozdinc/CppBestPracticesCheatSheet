@@ -98,7 +98,10 @@ int main() {
     std::cout << "***************4******************\n";
     //https://github.com/necatiergin/CPP_KURSU_KODLAR/blob/main/0720_TEMPLATES_CTAD/ctad_11.cpp
     ArrayWrapper arr1{"ozdinc"}; //CTAD
+    std::boolalpha(std::cout);
+    std::cout << "Is arr1 has a type of ArrayWrapper<char, 7> ? " << std::is_same_v<decltype(arr1), ArrayWrapper<char, 7>> << '\n';
     double darr[]{1.7, 4.1};
     ArrayWrapper arr2{darr}; //CTAD
+    std::cout << "Is arr2 has a type of ArrayWrapper<double, 2> ? " << std::is_same_v<decltype(arr2), ArrayWrapper<double, 2>> << '\n';
     std::cout << "***************4******************\n";
 }
