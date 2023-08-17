@@ -2,6 +2,20 @@
 #include <vector>
 #include <algorithm>
 
+template <typename T, std::size_t SIZE>
+struct ArrayWrapper {
+  ArrayWrapper(const T(&)[SIZE]) {
+      std::cout << "ArrayWrapper invoked with size : " << SIZE << '\n';
+      if (std::is_same_v<T, double>){
+          std::cout << "T is double(" << typeid(T).name() << ")\n";
+      } else if (std::is_same_v<T, char>){
+          std::cout << "T is char(" << typeid(T).name() << ")\n";
+      } else if (std::is_same_v<T, const char>){
+          std::cout << "T is const char(" << typeid(T).name() << ")\n";
+      }
+  }
+};
+
 template <typename CB>
 class CountCalls {
 public:
@@ -81,4 +95,9 @@ int main() {
     mocker(50);
     std::cout << "Total count of invocations of mock object : "<< ifMocker._count << '\n';
     std::cout << "***************3******************\n";
+    std::cout << "***************4******************\n";
+    ArrayWrapper arr1{"ozdinc"}; //CTAD
+    double darr[]{1.7, 4.1};
+    ArrayWrapper arr2{darr}; //CTAD
+    std::cout << "***************4******************\n";
 }
