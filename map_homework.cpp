@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <vector>
 
 static constexpr const char* logFile = "./out/map_homework.log";
 
@@ -39,6 +40,34 @@ int main(){
         dictionary2.emplace(s, i);
     }
     print_map(dictionary2, ofs);
+
+    ofs << "\n\n\n";
+
+    /**
+    * Bir multimap'te aynı anahtara karşılık gelen tüm değerleri değiştirin
+    */
+    std::multimap<int, std::string> dictionary3{};
+    dictionary3.emplace(1, "one");
+    dictionary3.emplace(2, "iki");
+    dictionary3.emplace(1, "bir");
+    dictionary3.emplace(1, "ein");
+
+    const auto& [lower, upper] = dictionary3.equal_range(1);
+    std::vector<std::pair<int, std::string>> range {lower, upper}; //=>RANGE Constructor
+    // populate on vector
+    for (auto& [i, s] : range) {
+        s = "pır";
+    }
+
+    print_map(dictionary3, ofs);
+
+    ofs << "\n\n\n";
+
+    // print vector (in this case, multimap remains same)
+    for (auto& [i, s] : range) {
+        //std::cout << i << "->" << s << '\n';
+        ofs << i << "->" << s << '\n';
+    }
 
     ofs.close();
     return EXIT_SUCCESS;
