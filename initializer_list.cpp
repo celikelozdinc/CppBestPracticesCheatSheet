@@ -1,6 +1,7 @@
 #include <iostream>
 #include <initializer_list>
 #include <vector>
+#include <memory>
 
 /**
  * C++ Initialization Story
@@ -47,14 +48,14 @@ struct Value {
 };
 
 int main() {
-    std::cout << "/**********Example 9.4**********/\n";
+    std::cout << "/**********Example 9.4(test constructor with initializer_list)**********/\n";
     X x1;               //=> 2
     X x2{};             //=> 2
     X x3{1};            //=> 3
     X x4(1);        //=> 1
     X x5{1, 17, 41};    //=> 3
-    std::cout << "/**********Example 9.4**********/\n";
-    std::cout << "/**********Example 9.7**********/\n";
+    std::cout << "/**********Example 9.4(test constructor with initializer_list)**********/\n";
+    std::cout << "/**********Example 9.7(extra copy in initializer_list)**********/\n";
     {
         std::cout << "starting inner scope...\n";
         std::cout << "with initializer_list...\n";
@@ -69,6 +70,21 @@ int main() {
         vec2.push_back(1);
         std::cout << "ending inner scope...\n";
     }
-    std::cout << "/**********Example 9.7**********/\n";
+    std::cout << "/**********Example 9.7(extra copy in initializer_list)**********/\n";
+    std::cout << "/**********Example 9.8(non-copyable types)**********/\n";
+    //std::vector<std::unique_ptr<int>> uPtrs = {
+    //        std::make_unique<int>(17),
+    //        std::make_unique<int>(41)
+    //};
+    //std::vector<std::unique_ptr<int>> uPtrs(2); //=> Fill c'tor
+    std::vector<std::unique_ptr<int>> uPtrs;
+    uPtrs.reserve(2);
+    std::cout << "Capacity of uPtrs: " << uPtrs.capacity() << '\n';
+    std::cout << "Size of uPtrs: " << uPtrs.size() << '\n';
+    uPtrs.emplace_back(std::make_unique<int>(17));
+    uPtrs.emplace_back(std::make_unique<int>(41));
+    std::cout << "Capacity of uPtrs: " << uPtrs.capacity() << '\n';
+    std::cout << "Size of uPtrs: " << uPtrs.size() << '\n';
+    std::cout << "/**********Example 9.8(non-copyable types**********/\n";
     return EXIT_SUCCESS;
 }
