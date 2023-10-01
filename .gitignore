@@ -9,6 +9,7 @@ universal_reference
 structured_binding
 ctad
 map_homework
+initializer_list
 lambda
 Embedded_Programming_with_ModernC++/.vscode/**
 .idea/**
