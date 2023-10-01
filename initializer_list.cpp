@@ -85,6 +85,14 @@ int main() {
     uPtrs.emplace_back(std::make_unique<int>(41));
     std::cout << "Capacity of uPtrs: " << uPtrs.capacity() << '\n';
     std::cout << "Size of uPtrs: " << uPtrs.size() << '\n';
+    //for (auto i : uPtrs) {
+    //    std::cout << *i << '\n';
+    //}
+    //unique_ptr(const unique_ptr&) = delete;
+    for (auto& i : uPtrs) {
+        std::cout << *i << '\n';
+    }
+
     std::cout << "/**********Example 9.8(non-copyable types**********/\n";
     return EXIT_SUCCESS;
 }
