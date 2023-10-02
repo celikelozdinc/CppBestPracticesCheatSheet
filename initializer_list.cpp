@@ -28,7 +28,7 @@ private:
  * Example 9.7
  */
 struct Value {
-    Value(int v) : _v{v} {
+    explicit Value(int v) : _v{v} {
         std::cout << "Constructed Value at : " << (void*)(this) << '\n';
     }
 
@@ -59,15 +59,15 @@ int main() {
     {
         std::cout << "starting inner scope...\n";
         std::cout << "with initializer_list...\n";
-        std::vector<Value> vec1{17, 41};
+        std::vector<Value> vec1{Value{17}, Value{41}};
         std::vector<Value> vec2{};
         vec2.reserve(4);
         std::cout << "with emplace...\n";
         vec2.emplace_back(1);
         vec2.emplace_back(7);
         std::cout << "with push...\n";
-        vec2.push_back(4);
-        vec2.push_back(1);
+        vec2.push_back(Value{4});
+        vec2.push_back(Value{1});
         std::cout << "ending inner scope...\n";
     }
     std::cout << "/**********Example 9.7(extra copy in initializer_list)**********/\n";
